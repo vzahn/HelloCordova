@@ -28,6 +28,10 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+        
+        // get position after device is ready
+        //navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
     },
 
     // Update DOM on a Received Event
@@ -42,5 +46,61 @@ var app = {
         console.log('Received Event: ' + id);
     }
 };
+
+var Latitude = undefined;
+var Longitude = undefined;
+
+// onSuccess Callback
+// This method accepts a Position object, which contains the
+// current GPS coordinates
+//
+var onSuccess = function(position) {
+    alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+    
+    var element = document.getElementById('geolocation');
+    element.innerHTML = 'Lat/Lon: '  + position.coords.latitude + ' ' + position.coords.longitude + '<br />';
+
+    Latitude = position.coords.latitude;
+    Longitude = position.coords.longitude;
+
+    getMap(Latitude, Longitude);
+};
+
+// onError Callback receives a PositionError object
+//
+function onError(error) {
+    alert('code: '    + error.code    + '\n' + 
+          'message: ' + error.message + '\n');
+}
+
+function getMap(latitude, longitude) {
+
+    var mapOptions = {
+        center: new google.maps.LatLng(0, 0),
+        zoom: 1,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map
+    (document.getElementById("map"), mapOptions);
+
+
+    var latLong = new google.maps.LatLng(latitude, longitude);
+
+    var marker = new google.maps.Marker({
+        position: latLong
+    });
+
+    marker.setMap(map);
+    map.setZoom(15);
+    map.setCenter(marker.getPosition());
+}
 
 app.initialize();
