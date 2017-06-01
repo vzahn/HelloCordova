@@ -31,7 +31,7 @@ var app = {
         
         // get position after device is ready
         //navigator.geolocation.getCurrentPosition(onSuccess, onError);
-        var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+        var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { maximumAge: 5000, timeout: 50000, enableHighAccuracy: true });
     },
 
     // Update DOM on a Received Event
@@ -49,12 +49,21 @@ var app = {
 
 var Latitude = undefined;
 var Longitude = undefined;
+var lastUpdateTime, minFrequency = 2*1000;
 
 // onSuccess Callback
 // This method accepts a Position object, which contains the
 // current GPS coordinates
 //
 var onSuccess = function(position) {
+    
+    var now = new Date();
+    if (lastUpdateTime && now.getTime() - lastUpdateTime.getTime() < minFrequency){
+        console.log("Ignoring position update");
+        return;
+    }
+    lastUpdateTime = now;
+
     console.log('Latitude: '          + position.coords.latitude          + '\n' +
                 'Longitude: '         + position.coords.longitude         + '\n' +
                 'Altitude: '          + position.coords.altitude          + '\n' +
