@@ -28,6 +28,8 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+
+        console.log("Device ready event, installing geo locator ...");
         
         // get position after device is ready
         //navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -50,6 +52,18 @@ var app = {
 var Latitude = undefined;
 var Longitude = undefined;
 var lastUpdateTime, minFrequency = 2*1000;
+var dummyData = {"id":"1",
+                    "jsonrpc":"2.0",
+                    "method":"sendPos",
+                    "params":{"contractId":"232323","obuid":"30343132343630303030303533",
+                    "pos":[
+                        {"lat":50.892671397047,"lon":4.459888181512,"time":1469016000,"vel":2.53},
+                        {"lat":50.892671397047,"lon":4.459888181512,"time":1469017000,"vel":2.53},
+                        ]}
+                };
+               
+//var urlObuGateway = "http://141.39.84.12:7580/gpsdata";
+var urlObuGateway = "http://10.33.145.38:8080/gpsdata";
 
 // onSuccess Callback
 // This method accepts a Position object, which contains the
@@ -80,6 +94,27 @@ var onSuccess = function(position) {
     Longitude = position.coords.longitude;
 
     getMap(Latitude, Longitude);
+
+    var parsedData = JSON.stringify(dummyData);
+
+    console.log("Sending GPS data: " + parsedData);
+
+    // Sending and receiving data in JSON format using POST mothod
+    $.ajax({
+        type       : "POST",
+        url        : urlObuGateway,
+        crossDomain: true,
+        data       : dummyData,
+        contentType: 'application/json; charset=utf-8',
+        success    : function(response) {
+            alert('Works!');
+            console.log("Response: " + response);
+        },
+        error      : function() {
+            alert('Not working!');                  
+        }
+    });
+
 };
 
 // onError Callback receives a PositionError object
