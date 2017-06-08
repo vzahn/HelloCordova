@@ -62,8 +62,9 @@ var dummyData = {"id":"1",
                         ]}
                 };
                
-//var urlObuGateway = "http://141.39.84.12:7580/gpsdata";
-var urlObuGateway = "http://10.33.145.38:8080/gpsdata";
+var urlObuGateway = "http://141.39.84.12:7580/gpsdata";
+//var urlObuGateway = "http://10.33.145.38:8080/gpsdata";
+//var urlObuGateway = "http://127.0.0.1:8091/gpsdata";
 
 // onSuccess Callback
 // This method accepts a Position object, which contains the
@@ -104,11 +105,12 @@ var onSuccess = function(position) {
         type       : "POST",
         url        : urlObuGateway,
         crossDomain: true,
-        data       : dummyData,
+        data       : parsedData,
+        dataType   : "json",
         contentType: 'application/json; charset=utf-8',
         success    : function(response) {
-            alert('Works!');
-            console.log("Response: " + response);
+            console.log("Response: %O", response);
+            console.log("Response: " + JSON.stringify(response));
         },
         error      : function() {
             alert('Not working!');                  
