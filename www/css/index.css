@@ -91,6 +91,30 @@ h1 {
     display:none;
 }
 
+.status {
+    border-radius:4px;
+    -webkit-border-radius:4px;
+    color:#FFFFFF;
+    font-size:12px;
+    margin:0px 30px;
+    padding:2px 0px;
+    background-color:#333333;
+    display:block;
+    min-height: 18px;
+}
+
+.status.left {
+    float: left;
+    min-height: 12px;
+    padding: 2px 10px 2px 10px;
+}
+
+.status.right {
+    float: right;
+    min-height: 12px;
+    padding: 2px 10px 2px 10px;
+}
+
 @keyframes fade {
     from { opacity: 1.0; }
     50% { opacity: 0.4; }
